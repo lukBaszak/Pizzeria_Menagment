@@ -1,0 +1,5 @@
+Django
+pytest
+djangorestframework
+pytest-cov
+django-phonenumber-field[phonenumberslite]
