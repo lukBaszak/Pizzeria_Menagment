@@ -3,3 +3,5 @@ pytest
 djangorestframework
 pytest-cov
 django-phonenumber-field[phonenumberslite]
+Pillow
+django-imagekit

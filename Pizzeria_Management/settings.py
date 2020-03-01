@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'Pizzeria_Management.apps.pizzeria.apps.PizzeriaConfig',
     'rest_framework',
     'phonenumber_field',
+    'imagekit'
 ]
 
 MIDDLEWARE = [
