@@ -5,3 +5,11 @@ pytest-cov
 django-phonenumber-field[phonenumberslite]
 Pillow
 django-imagekit
+gunicorn
+drf-yasg==1.17.1
+djoser==2.0.3
+django-cors-headers
+django-filter
+psycopg2-binary
+django-nested-inline
+

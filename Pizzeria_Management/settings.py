@@ -15,10 +15,36 @@ SECRET_KEY = 'ux2sj28%#6&tnlrhzk&%h(zh33*=jx#5gh3sk%c-3_tdfu33^n'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1']
 
+AUTH_USER_MODEL = 'accounts.Account'
 
 # Application definition
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+    'NAME': os.environ['DATABASE_NAME'],
+	'USER': os.environ['DATABASE_USER'],
+	'PASSWORD': os.environ['DATABASE_PASSWORD'],
+	'HOST': os.environ['DATABASE_HOST'],
+	'PORT': os.environ['DATABASE_PORT'],
+    }
+}
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend'],
+
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+            'rest_framework.authentication.TokenAuthentication',
+            'rest_framework.authentication.BasicAuthentication',
+        ],
+    'DEFAULT_PERMISSION_CLASSES': (
+        # 'rest_framework.permissions.IsAuthenticated',
+        # 'rest_framework.permissions.IsAdminUser',
+     ),
+    'PAGE_SIZE': 100,
+
+}
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -27,11 +53,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Pizzeria_Management.apps.accounts.apps.AccountsConfig',
-    'Pizzeria_Management.apps.pizzeria.apps.PizzeriaConfig',
+    'Pizzeria_Management.apps.accounts',
+    'Pizzeria_Management.apps.pizzeria',
     'rest_framework',
+    'rest_framework.authtoken',
     'phonenumber_field',
-    'imagekit'
+    'imagekit',
+    'nested_inline'
 ]
 
 MIDDLEWARE = [
@@ -69,12 +97,7 @@ WSGI_APPLICATION = 'Pizzeria_Management.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.0/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
+
 
 
 # Password validation
@@ -115,3 +138,5 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 MEDIA_URL = '/media/'
+
+STATIC_ROOT = 'static'
