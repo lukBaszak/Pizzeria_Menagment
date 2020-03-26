@@ -1,0 +1,45 @@
+version: '3'
+services:
+    pizzeria_server:
+        build: .
+        command: bash -c "python manage.py migrate && gunicorn Pizzeria_Management.wsgi --reload --bind 0.0.0.0:8000"
+        depends_on:
+            - postgres
+        volumes:
+            - .:/code
+
+        environment:
+            DATABASE_NAME: "${DATABASE_NAME}"
+            DATABASE_USER: "${DATABASE_USER}"
+            DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+            DATABASE_PORT: "${DATABASE_PORT}"
+            DATABASE_HOST: "${DATABASE_HOST}"
+        env_file: .env
+        ports:
+            - "8000:8000"
+    postgres:
+        build: ./postgres
+        volumes:
+          - ./postgres/postgres_data:/var/lib/postgresql/data/
+        environment:
+            POSTGRES_PASSWORD: postgres
+            DATABASE_NAME: "${DATABASE_NAME}"
+            DATABASE_USER: "${DATABASE_USER}"
+            DATABASE_PASSWORD: "${DATABASE_PASSWORD}"
+            DATABASE_PORT: "${DATABASE_PORT}"
+            DATABASE_HOST: "${DATABASE_HOST}"
+        command: "-p 8005"
+        env_file: .env
+        ports:
+           - "127.0.0.1:8005:8005"
+    nginx:
+      image: nginx:latest
+      container_name: nginx1
+      ports:
+        - "8001:80"
+      volumes:
+        - .:/code
+        - ./config/nginx:/etc/nginx/conf.d
+      depends_on:
+        - pizzeria_server
+
