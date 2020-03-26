@@ -4,10 +4,11 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 from imagekit.admin import AdminThumbnail
 
-from Pizzeria_Management.apps.pizzeria.models import Pizza, Topping, PizzaSize, PizzaOrder, Item, ToppingRecipe, Order, \
-    ItemOrder
 
 from nested_inline.admin import NestedStackedInline, NestedModelAdmin
+
+from Pizzeria_Management.apps.pizzeria.models.dishes import Topping, Item, PizzaSize, Pizza, ToppingRecipe
+from Pizzeria_Management.apps.pizzeria.models.orders import ItemOrder, PizzaOrder, Order
 
 admin.site.register(Topping)
 admin.site.register(Item)
@@ -37,13 +38,12 @@ class PizzaOrderAdmin(admin.ModelAdmin):
         PizzaToppingsInline
     ]
 
-
 admin.site.register(PizzaOrder, PizzaOrderAdmin)
-
 
 
 class PizzaToppingsTwoInline(NestedStackedInline):
     model = ToppingRecipe
+    extra = 0
     verbose_name = "additional Topping"
 
 
@@ -53,13 +53,27 @@ class PizzaOrderInLine(NestedStackedInline):
 
     inlines = [PizzaToppingsTwoInline]
 
+class ItemInLine(NestedStackedInline):
+    model = Item
+    verbose_name = 'Danie'
+
+class ItemOrderInLine(NestedStackedInline):
+    model = ItemOrder
+
+    inlines = [ItemInLine]
+
 class OrderAdmin(NestedModelAdmin):
     model = Order
+    readonly_fields = ['total_price']
+
 
     inlines = [
         PizzaOrderInLine,
+        ItemOrderInLine
 
     ]
+
+
 
 admin.site.register(Order, OrderAdmin)
 
